@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Campus What-If Lab — Digital Twin Campus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./styles.css" />
+<link rel="stylesheet" href="./campus-pulse.css" />
+
+<!-- Apply saved theme before paint to avoid flash -->
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem("dtc-theme");
+      if (t === "light") document.documentElement.setAttribute("data-theme", "light");
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body class="pulse-body">
+
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-glow" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true"><span></span></div>
+    <div>
+      <h1>DIGITAL TWIN <em>CAMPUS</em></h1>
+      <p class="brand-sub">What-If Lab · Scenario Simulator</p>
+    </div>
+  </div>
+
+  <nav class="role-switch" role="tablist">
+    <a href="./index.html" class="role-btn">Dashboard</a>
+    <a href="./campus-pulse.html" class="role-btn is-active">What-If Lab</a>
+  </nav>
+
+  <div class="topbar-right">
+    <div class="live-chip"><span class="dot"></span> SIMULATION MODE</div>
+    <button id="themeToggle" class="icon-btn" title="Toggle light / dark" aria-label="Toggle light or dark theme">◐</button>
+  </div>
+</header>
+
+<main class="lab-shell">
+
+  <!-- ============ INTRO ============ -->
+  <section class="lab-intro">
+    <p class="eyebrow">Decision sandbox</p>
+    <h1 class="lab-title">What happens if a campus event occurs?</h1>
+    <p class="lab-sub">
+      Pick an event, choose a response plan, and run a simulation to see the
+      outcome before it happens.
+    </p>
+  </section>
+
+  <!-- ============ STEP PROGRESS ============ -->
+  <div class="lab-progress">
+    <div class="lab-step is-active" data-step="1">
+      <span class="ls-num">1</span>
+      <span class="ls-label">Event</span>
+    </div>
+    <div class="ls-track"></div>
+    <div class="lab-step" data-step="2">
+      <span class="ls-num">2</span>
+      <span class="ls-label">Response</span>
+    </div>
+    <div class="ls-track"></div>
+    <div class="lab-step" data-step="3">
+      <span class="ls-num">3</span>
+      <span class="ls-label">Result</span>
+    </div>
+  </div>
+
+  <!-- ============ STEP 1: EVENT ============ -->
+  <section class="lab-panel" id="stepEvent">
+    <h2 class="lab-panel-title">Choose a scenario</h2>
+    <p class="lab-panel-sub">Select one event to simulate.</p>
+
+    <div class="event-grid" id="eventGrid"></div>
+
+    <div class="event-brief" id="eventBrief" hidden></div>
+
+    <div class="lab-actions">
+      <button class="lab-btn lab-btn-primary" id="toStep2" disabled>
+        Continue to response plans
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ STEP 2: PLAN ============ -->
+  <section class="lab-panel" id="stepPlan" hidden>
+    <div class="lab-panel-head">
+      <div>
+        <p class="lab-panel-kicker" id="planKicker">Scenario</p>
+        <h2 class="lab-panel-title">Choose a response plan</h2>
+        <p class="lab-panel-sub">Each plan trades off cost against safety and speed.</p>
+      </div>
+      <button class="lab-btn lab-btn-ghost" data-back="1">Change event</button>
+    </div>
+
+    <div class="plan-list" id="planList"></div>
+
+    <div class="lab-actions">
+      <button class="lab-btn lab-btn-ghost" data-back="1">Back</button>
+      <button class="lab-btn lab-btn-primary" id="runSim" disabled>
+        Run simulation
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ STEP 3: RESULT ============ -->
+  <section class="lab-panel" id="stepResult" hidden>
+    <div class="lab-panel-head">
+      <div>
+        <p class="lab-panel-kicker" id="resultKicker">Simulation result</p>
+        <h2 class="lab-panel-title" id="resultTitle">Campus outcome</h2>
+      </div>
+      <button class="lab-btn lab-btn-ghost" id="newSim">Run new simulation</button>
+    </div>
+
+    <!-- Best plan banner -->
+    <div class="best-plan-banner" id="bestPlanBanner"></div>
+
+    <!-- Comparison table -->
+    <div class="compare-wrap">
+      <table class="compare-table" id="compareTable">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th data-plan="A">Plan A<br /><span>No Action</span></th>
+            <th data-plan="B">Plan B<br /><span>Basic Response</span></th>
+            <th data-plan="C">Plan C<br /><span>AI-Optimized</span></th>
+          </tr>
+        </thead>
+        <tbody id="compareBody"></tbody>
+      </table>
+    </div>
+
+    <!-- AI decision insight -->
+    <div class="ai-insight" id="aiInsight">
+      <div class="ai-insight-icon">✦</div>
+      <div>
+        <p class="ai-insight-label">AI Decision Insight</p>
+        <p class="ai-insight-text" id="aiInsightText"></p>
+      </div>
+    </div>
+
+    <div class="lab-actions">
+      <button class="lab-btn lab-btn-ghost" id="newSim2">Run new simulation</button>
+      <button class="lab-btn lab-btn-primary" id="acceptPlan">
+        Accept recommended plan
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="lab-footer">
+  <span class="mono tiny">Campus What-If Lab · Simulated scenario simulator · No live data used</span>
+</footer>
+
+<script>
+  // Theme toggle — mirrors the behaviour in index.html and persists across pages
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById("themeToggle");
+    if (!btn) return;
+
+    btn.addEventListener("click", function () {
+      var isLight = root.getAttribute("data-theme") === "light";
+      if (isLight) {
+        root.removeAttribute("data-theme");
+        try { localStorage.setItem("dtc-theme", "dark"); } catch (e) {}
+      } else {
+        root.setAttribute("data-theme", "light");
+        try { localStorage.setItem("dtc-theme", "light"); } catch (e) {}
+      }
+    });
+  })();
+</script>
+
+<script src="./campus-pulse-data.js"></script>
+<script src="./campus-pulse.js"></script>
+</body>
+</html>
