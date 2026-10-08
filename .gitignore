@@ -1,0 +1,9 @@
+node_modules/
+.env
+.DS_Storeai/__pycache__/
+campus_backup.sql
+.venv/
+__pycache__/
+*.pyc
+*.pkl
+*.sql
