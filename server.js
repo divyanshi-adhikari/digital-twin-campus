@@ -17,6 +17,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname));
 app.use("/occupancy", occupancyRoutes);
 app.use("/faculty-cabins", facultyCabinRoutes);
 app.use("/facilities", facilityRoutes);

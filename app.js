@@ -564,7 +564,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await initStudent();
   await initFaculty();
   await initAdmin();
-  initTwinPlaceholder();
+  // initTwinPlaceholder();
 
   await loadAIPatterns();
   await loadAIAnomalies();
