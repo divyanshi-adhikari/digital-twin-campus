@@ -3,59 +3,191 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 <title>Digital Twin Campus — Student, Faculty & Admin Portals</title>
-<meta name="description" content="Unified smart campus portal: 3D twin navigation, live room availability, resource analytics and maintenance alerts." />
+
+<meta
+  name="description"
+  content="Unified smart campus portal: 3D twin navigation, live room availability, resource analytics and maintenance alerts."
+/>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+  rel="stylesheet"
+/>
+
 <link rel="stylesheet" href="./styles.css" />
 </head>
+
 <body>
 
-<!-- ambient background grid + glow -->
+<!-- =========================================================
+     AMBIENT BACKGROUND
+     ========================================================= -->
+
 <div class="bg-grid" aria-hidden="true"></div>
 <div class="bg-glow" aria-hidden="true"></div>
 
-<!-- ============ TOP BAR ============ -->
+
+<!-- =========================================================
+     TOP BAR
+     ========================================================= -->
+
 <header class="topbar">
+
   <div class="brand">
-    <div class="brand-mark" aria-hidden="true"><span></span></div>
+
+    <div class="brand-mark" aria-hidden="true">
+      <span></span>
+    </div>
+
     <div>
       <h1>DIGITAL TWIN <em>CAMPUS</em></h1>
-      <p class="brand-sub">Live campus mirror · v0.9 prototype</p>
+      <p class="brand-sub">
+        Live campus mirror · v0.9 prototype
+      </p>
     </div>
+
   </div>
 
-  <!-- Role switcher: swaps the whole portal view -->
-  <nav class="role-switch" role="tablist" aria-label="Select portal">
-    <button class="role-btn is-active" role="tab" data-view="student">Student</button>
-    <button class="role-btn" role="tab" data-view="faculty">Faculty</button>
-    <button class="role-btn" role="tab" data-view="admin">Admin</button>
-    <span class="role-pill" aria-hidden="true"></span>
-  </nav>
+
+  <!-- Existing role switcher -->
+ 
+<nav
+  class="role-switch"
+  role="tablist"
+  aria-label="Select portal"
+>
+  <button
+    class="role-btn is-active"
+    role="tab"
+    data-view="student"
+  >
+    Student
+  </button>
+
+  <button
+    class="role-btn"
+    role="tab"
+    data-view="faculty"
+  >
+    Faculty
+  </button>
+
+  <button
+    class="role-btn"
+    role="tab"
+    data-view="admin"
+  >
+    Admin
+  </button>
+
+  <span
+    class="role-pill"
+    aria-hidden="true"
+  ></span>
+
+  <button
+  class="role-btn"
+  role="tab"
+  data-view="campus-intelligence"
+>
+  Campus Intelligence
+</button>
+</nav>
 
   <div class="topbar-right">
-    <div class="live-chip"><span class="dot"></span> LIVE <span id="clock" class="mono"></span></div>
-    <button id="themeToggle" class="icon-btn" title="Toggle light / dark">◐</button>
+
+    <div class="live-chip">
+      <span class="dot"></span>
+      LIVE
+      <span
+        id="clock"
+        class="mono"
+      ></span>
+    </div>
+
+    <button
+      id="themeToggle"
+      class="icon-btn"
+      title="Toggle light / dark"
+    >
+      ◐
+    </button>
+
   </div>
+
 </header>
+
+
 
 <main class="shell">
 
-  <!-- ======================================================= -->
-  <!-- ==================  STUDENT PORTAL  =================== -->
-  <!-- ======================================================= -->
-  <section class="view is-active" id="view-student">
 
-    <div class="hero-strip">
-      <div>
-        <p class="eyebrow">Student workspace</p>
-        <h2 class="page-title">Find your way, in real time.</h2>
-      </div>
-      <div class="stat-inline" id="studentQuickStats"><!-- JS --></div>
+<!-- =========================================================
+     ===================== STUDENT PORTAL ====================
+     ========================================================= -->
+
+<section
+  class="view is-active"
+  id="view-student"
+>
+
+
+  <!-- STUDENT HEADER -->
+
+  <div class="hero-strip">
+
+    <div>
+
+      <p class="eyebrow">
+        Student workspace
+      </p>
+
+      <h2 class="page-title">
+        Find your way, in real time.
+      </h2>
+
     </div>
 
-    <div class="grid grid-student">
+    <div
+      class="stat-inline"
+      id="studentQuickStats"
+    >
+      <!-- JS -->
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       CAMPUS TWIN — MAIN FEATURE
+       ===================================================== -->
+
+  <div class="grid grid-student">
+
+
+    <section class="card card-map span-2">
+
+      <div class="card-head">
+
+        <h3>
+          Campus Twin · 3D View
+        </h3>
+
+        <div
+          class="floor-tabs"
+          id="floorTabs"
+        >
+          <!-- JS -->
+        </div>
+
+      </div>
+
 
       <!-- 3D MAP PLACEHOLDER (team hook) -->
       <section class="card card-map span-2">
@@ -86,307 +218,1230 @@
         </div>
       </section>
 
-      <!-- ROOM SEARCH + AVAILABILITY -->
-      <section class="card">
-        <div class="card-head">
-          <h3>Room Finder</h3>
-          <span class="badge badge-ghost mono" id="roomCount"></span>
-        </div>
-        <div class="search-wrap">
-          <input id="roomSearch" class="input" type="search" placeholder="Search room, lab, cabin…  e.g. AB-204" autocomplete="off" />
-        </div>
-        <div class="chips" id="roomFilters">
-          <button class="chip is-active" data-filter="all">All</button>
-          <button class="chip" data-filter="available">Available</button>
-          <button class="chip" data-filter="occupied">Occupied</button>
-          <button class="chip" data-filter="lab">Labs</button>
-          <button class="chip" data-filter="cabin">Cabins</button>
-        </div>
-        <ul class="room-list" id="roomList"><!-- JS --></ul>
-      </section>
+      <div
+        class="map-canvas"
+        id="map-canvas-container"
+        data-hook="3d-canvas"
+      >
 
-      <!-- AI ASSISTANT -->
-      <section class="card card-chat">
-        <div class="card-head">
-          <h3>Campus AI Assistant</h3>
-          <span class="badge badge-live">beta</span>
+        <canvas id="twinCanvas"></canvas>
+
+
+        <div class="map-overlay">
+
+          <span class="badge badge-ghost mono">
+            #map-canvas-container
+          </span>
+
+          <p>
+            Mount the 3D campus model here
+            (Three.js / Babylon).<br />
+            Animated placeholder rendering until then.
+          </p>
+
         </div>
-        <div class="chat-log" id="chatLog"><!-- JS --></div>
-        <div class="chat-suggestions" id="chatSuggestions"><!-- JS --></div>
-        <form class="chat-input" id="chatForm" autocomplete="off">
-          <input id="chatInput" class="input" placeholder="Ask about rooms, routes, crowd…" />
-          <button class="btn btn-primary" type="submit">Send</button>
-        </form>
-      </section>
 
-      <!-- NOTICES / CROWD -->
-      <section class="card">
-        <div class="card-head"><h3>Crowd Pulse</h3><span class="mono tiny">next 3 hrs</span></div>
-        <div class="spark" id="crowdSpark"><!-- JS --></div>
-        <ul class="notice-list" id="noticeList"><!-- JS --></ul>
-      </section>
 
-    </div>
-  </section>
+        <div class="map-legend">
 
-  <!-- ======================================================= -->
-  <!-- ==================  FACULTY PORTAL  =================== -->
-  <!-- ======================================================= -->
-  <section class="view" id="view-faculty">
-    <div class="hero-strip">
-      <div>
-        <p class="eyebrow">Faculty workspace</p>
-        <h2 class="page-title">Teach, share, report — one board.</h2>
+          <span>
+            <i class="sw sw-free"></i>
+            Available
+          </span>
+
+          <span>
+            <i class="sw sw-busy"></i>
+            Occupied
+          </span>
+
+          <span>
+            <i class="sw sw-soon"></i>
+            Soon free
+          </span>
+
+        </div>
+
       </div>
-      <div class="stat-inline" id="facultyQuickStats"></div>
-    </div>
 
-    <div class="grid grid-faculty">
 
-      <!-- LOCATOR -->
-      <section class="card span-2">
-        <div class="card-head">
-          <h3>Classroom &amp; Cabin Locator</h3>
-          <input id="facultySearch" class="input input-inline" placeholder="Search faculty or room…" />
-        </div>
-        <div class="table-wrap">
-          <table class="table" id="facultyTable">
-            <thead><tr><th>Faculty / Room</th><th>Block</th><th>Floor</th><th>Status</th><th>Next slot</th></tr></thead>
-            <tbody><!-- JS --></tbody>
-          </table>
-        </div>
-      </section>
+      <!-- ROUTE -->
 
-      <!-- LIVE ROOM AVAILABILITY GRID -->
-      <section class="card">
-        <div class="card-head"><h3>Room Availability</h3><span class="mono tiny" id="availSummary"></span></div>
-        <div class="avail-grid" id="availGrid"><!-- JS --></div>
-      </section>
+      <div
+        class="route-bar"
+        id="routeBar"
+      >
 
-      <!-- RESOURCE SHARING FORM -->
-      <section class="card">
-        <div class="card-head"><h3>Share Academic Resource</h3></div>
-        <form class="form" id="resourceForm">
-          <label>Title<input class="input" name="title" required placeholder="Unit 3 — Digital Twins notes" /></label>
-          <div class="form-row">
-            <label>Course<input class="input" name="course" required placeholder="CSE3012" /></label>
-            <label>Type
-              <select class="input" name="type">
-                <option>Notes</option><option>Slides</option><option>Lab Manual</option><option>Question Bank</option>
-              </select>
-            </label>
-          </div>
-          <label>Link / File reference<input class="input" name="link" placeholder="https://…" /></label>
-          <button class="btn btn-primary" type="submit">Publish to students</button>
-        </form>
-        <ul class="feed" id="resourceFeed"><!-- JS --></ul>
-      </section>
+        <span class="mono">
+          ROUTE
+        </span>
 
-      <!-- MAINTENANCE REPORT -->
-      <section class="card">
-        <div class="card-head"><h3>Report Maintenance Issue</h3></div>
-        <form class="form" id="issueForm">
-          <div class="form-row">
-            <label>Location
-              <select class="input" name="room" id="issueRoom"></select>
-            </label>
-            <label>Category
-              <select class="input" name="category">
-                <option>Electrical</option><option>Plumbing</option><option>Projector / AV</option><option>Furniture</option><option>Network</option>
-              </select>
-            </label>
-          </div>
-          <label>Priority
-            <div class="seg" id="prioritySeg">
-              <button type="button" class="seg-btn" data-val="Low">Low</button>
-              <button type="button" class="seg-btn is-active" data-val="Medium">Medium</button>
-              <button type="button" class="seg-btn" data-val="High">High</button>
-            </div>
-          </label>
-          <label>Description<textarea class="input" name="description" rows="3" placeholder="Projector flickers after 10 min…"></textarea></label>
-          <button class="btn btn-danger" type="submit">Raise ticket</button>
-        </form>
-        <ul class="feed" id="issueFeed"><!-- JS --></ul>
-      </section>
-    </div>
-  </section>
+        <select
+          id="routeFrom"
+          class="mini-select"
+        ></select>
 
-  <!-- ======================================================= -->
-  <!-- ===================  ADMIN PORTAL  ==================== -->
-  <!-- ======================================================= -->
-  <section class="view" id="view-admin">
-    <div class="hero-strip">
-      <div>
-        <p class="eyebrow">Administration control room</p>
-        <h2 class="page-title">Campus vitals at a glance.</h2>
+        <span class="arrow">
+          →
+        </span>
+
+        <select
+          id="routeTo"
+          class="mini-select"
+        ></select>
+
+        <button
+          class="btn btn-primary btn-sm"
+          id="routeBtn"
+        >
+          Navigate
+        </button>
+
+        <span
+          class="route-out mono"
+          id="routeOut"
+        >
+          —
+        </span>
+
       </div>
-      <div class="stat-inline" id="adminQuickStats"></div>
-    </div>
-
-    <div class="kpi-row" id="kpiRow"><!-- JS --></div>
-
-        <!-- AI ANALYTICS -->
-    <section class="ai-section">
-
-      <!-- 30-MINUTE OCCUPANCY PREDICTION -->
-      <section class="card ai-card ai-card-prediction">
-        <div class="card-head">
-          <div>
-            <p class="tiny ai-eyebrow">AI / FORECAST</p>
-            <h3>30-Minute Occupancy Prediction</h3>
-          </div>
-          <span class="badge badge-live">AI MODEL</span>
-        </div>
-
-        <div class="ai-prediction-grid">
-          <div class="ai-metric ai-metric-current">
-            <span>Current Occupancy</span>
-            <b id="aiCurrentOccupancy">—</b>
-          </div>
-          <div class="ai-metric ai-metric-predicted">
-            <span>Predicted Occupancy</span>
-            <b id="aiPredictedOccupancy">—</b>
-          </div>
-          <div class="ai-metric ai-metric-change">
-            <span>Predicted Change</span>
-            <b id="aiPredictedChange">—</b>
-          </div>
-          <div class="ai-metric ai-metric-crowd">
-            <span>Crowd Level</span>
-            <b id="aiCrowdLevel">—</b>
-          </div>
-        </div>
-
-        <div class="ai-recommendation">
-          <span class="tiny">AI Recommendation</span>
-          <p id="aiRecommendation">Waiting for prediction...</p>
-          <small id="aiAction"></small>
-        </div>
-
-        <p class="ai-source">
-          Prototype prediction using the trained occupancy model and public ROBOD/NUS data.
-        </p>
-      </section>
-
-      <!-- OCCUPANCY PATTERN ANALYSIS -->
-      <section class="card ai-card ai-card-patterns">
-        <div class="card-head">
-          <div>
-            <p class="tiny ai-eyebrow">AI / PATTERNS</p>
-            <h3>Occupancy Patterns</h3>
-          </div>
-          <span class="badge badge-ghost">ANALYTICS</span>
-        </div>
-
-        <div class="ai-stat-list">
-          <div>
-            <span>Peak Hour</span>
-            <b id="aiPeakHour">—</b>
-          </div>
-          <div>
-            <span>Peak Avg.</span>
-            <b id="aiPeakAverage">—</b>
-          </div>
-          <div>
-            <span>Weekday Avg.</span>
-            <b id="aiWeekdayAverage">—</b>
-          </div>
-          <div>
-            <span>Weekend Avg.</span>
-            <b id="aiWeekendAverage">—</b>
-          </div>
-          <div>
-            <span>Wi-Fi Correlation</span>
-            <b id="aiWifiCorrelation">—</b>
-          </div>
-        </div>
-      </section>
-
-      <!-- ANOMALY DETECTION -->
-      <section class="card ai-card ai-card-anomalies">
-        <div class="card-head">
-          <div>
-            <p class="tiny ai-eyebrow">AI / ANOMALIES</p>
-            <h3>Occupancy Anomalies</h3>
-          </div>
-          <span class="badge badge-warn">DETECTION</span>
-        </div>
-
-        <div class="ai-anomaly-content">
-          <div class="ai-anomaly-main">
-            <b id="aiAnomalyCount">—</b>
-            <span>anomalies detected</span>
-          </div>
-
-          <div class="ai-anomaly-details">
-            <div>
-              <span>Total Records</span>
-              <b id="aiAnomalyTotal">—</b>
-            </div>
-            <div>
-              <span>Detection Rate</span>
-              <b id="aiAnomalyRate">—</b>
-            </div>
-          </div>
-        </div>
-
-        <p class="ai-source">
-          Statistical anomaly detection using rolling occupancy behavior.
-        </p>
-      </section>
 
     </section>
 
-    <div class="grid grid-admin">
 
-      <!-- OCCUPANCY HEATMAP -->
-      <section class="card span-2">
-        <div class="card-head">
-          <h3>Occupancy Heatmap</h3>
-          <span class="mono tiny">block × hour · % capacity</span>
-        </div>
-        <div class="heatmap" id="heatmap"><!-- JS --></div>
-        <div class="heat-scale"><span class="mono tiny">low</span><i class="heat-bar"></i><span class="mono tiny">high</span></div>
-      </section>
 
-      <!-- UTILITIES -->
-      <section class="card">
-        <div class="card-head"><h3>Utility Consumption</h3><span class="mono tiny">vs daily budget</span></div>
-        <div class="meters" id="utilityMeters"><!-- JS --></div>
-      </section>
+    <!-- =====================================================
+         ROOM FINDER
+         ===================================================== -->
 
-      <!-- PARKING -->
-      <section class="card">
-        <div class="card-head"><h3>Smart Parking</h3><span class="mono tiny" id="parkSummary"></span></div>
-        <div class="park-lots" id="parkingLots"><!-- JS --></div>
-      </section>
+    <section class="card">
 
-      <!-- MAINTENANCE LOG -->
-      <section class="card span-2">
-        <div class="card-head">
-          <h3>Maintenance Alert Log</h3>
-          <div class="chips" id="alertFilters">
-            <button class="chip is-active" data-sev="all">All</button>
-            <button class="chip" data-sev="High">High</button>
-            <button class="chip" data-sev="Medium">Medium</button>
-            <button class="chip" data-sev="Low">Low</button>
-          </div>
-        </div>
-        <ul class="alert-log" id="alertLog"><!-- JS --></ul>
-      </section>
+      <div class="card-head">
+
+        <h3>
+          Room Finder
+        </h3>
+
+        <span
+          class="badge badge-ghost mono"
+          id="roomCount"
+        ></span>
+
+      </div>
+
+
+      <div class="search-wrap">
+
+        <input
+          id="roomSearch"
+          class="input"
+          type="search"
+          placeholder="Search room, lab, cabin…  e.g. AB-204"
+          autocomplete="off"
+        />
+
+      </div>
+
+
+      <div
+        class="chips"
+        id="roomFilters"
+      >
+
+        <button
+          class="chip is-active"
+          data-filter="all"
+        >
+          All
+        </button>
+
+        <button
+          class="chip"
+          data-filter="available"
+        >
+          Available
+        </button>
+
+        <button
+          class="chip"
+          data-filter="occupied"
+        >
+          Occupied
+        </button>
+
+        <button
+          class="chip"
+          data-filter="lab"
+        >
+          Labs
+        </button>
+
+        <button
+          class="chip"
+          data-filter="cabin"
+        >
+          Cabins
+        </button>
+
+      </div>
+
+
+      <ul
+        class="room-list"
+        id="roomList"
+      >
+        <!-- JS -->
+      </ul>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CAMPUS AI ASSISTANT
+         ===================================================== -->
+
+    <section class="card card-chat">
+
+      <div class="card-head">
+
+        <h3>
+          Campus AI Assistant
+        </h3>
+
+        <span class="badge badge-live">
+          beta
+        </span>
+
+      </div>
+
+
+      <div
+        class="chat-log"
+        id="chatLog"
+      >
+        <!-- JS -->
+      </div>
+
+
+      <div
+        class="chat-suggestions"
+        id="chatSuggestions"
+      >
+        <!-- JS -->
+      </div>
+
+
+      <form
+        class="chat-input"
+        id="chatForm"
+        autocomplete="off"
+      >
+
+        <input
+          id="chatInput"
+          class="input"
+          placeholder="Ask about rooms, routes, crowd…"
+        />
+
+        <button
+          class="btn btn-primary"
+          type="submit"
+        >
+          Send
+        </button>
+
+      </form>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CROWD PULSE
+         ===================================================== -->
+
+    <section class="card">
+
+      <div class="card-head">
+
+        <h3>
+          Crowd Pulse
+        </h3>
+
+        <span class="mono tiny">
+          next 3 hrs
+        </span>
+
+      </div>
+
+
+      <div
+        class="spark"
+        id="crowdSpark"
+      >
+        <!-- JS -->
+      </div>
+
+
+      <ul
+        class="notice-list"
+        id="noticeList"
+      >
+        <!-- JS -->
+      </ul>
+
+    </section>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ===================== FACULTY PORTAL ====================
+     ========================================================= -->
+
+<section
+  class="view"
+  id="view-faculty"
+>
+
+
+  <!-- FACULTY HEADER -->
+
+  <div class="hero-strip">
+
+    <div>
+
+      <p class="eyebrow">
+        Faculty workspace
+      </p>
+
+      <h2 class="page-title">
+        Teach, share, report — one board.
+      </h2>
+
     </div>
+
+    <div
+      class="stat-inline"
+      id="facultyQuickStats"
+    ></div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       FACULTY LOCATOR
+       ===================================================== -->
+
+  <div class="grid grid-faculty">
+
+
+    <section class="card span-2">
+
+      <div class="card-head">
+
+        <h3>
+          Classroom &amp; Cabin Locator
+        </h3>
+
+        <input
+          id="facultySearch"
+          class="input input-inline"
+          placeholder="Search faculty or room…"
+        />
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table
+          class="table"
+          id="facultyTable"
+        >
+
+          <thead>
+
+            <tr>
+              <th>Faculty / Room</th>
+              <th>Block</th>
+              <th>Floor</th>
+              <th>Status</th>
+              <th>Next slot</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+            <!-- JS -->
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ROOM AVAILABILITY
+         ===================================================== -->
+
+    <section class="card">
+
+      <div class="card-head">
+
+        <h3>
+          Room Availability
+        </h3>
+
+        <span
+          class="mono tiny"
+          id="availSummary"
+        ></span>
+
+      </div>
+
+
+      <div
+        class="avail-grid"
+        id="availGrid"
+      >
+        <!-- JS -->
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         SHARE RESOURCE
+         ===================================================== -->
+
+    <section class="card">
+
+      <div class="card-head">
+
+        <h3>
+          Share Academic Resource
+        </h3>
+
+      </div>
+
+
+      <form
+        class="form"
+        id="resourceForm"
+      >
+
+        <label>
+          Title
+
+          <input
+            class="input"
+            name="title"
+            required
+            placeholder="Unit 3 — Digital Twins notes"
+          />
+
+        </label>
+
+
+        <div class="form-row">
+
+          <label>
+            Course
+
+            <input
+              class="input"
+              name="course"
+              required
+              placeholder="CSE3012"
+            />
+
+          </label>
+
+
+          <label>
+            Type
+
+            <select
+              class="input"
+              name="type"
+            >
+
+              <option>Notes</option>
+              <option>Slides</option>
+              <option>Lab Manual</option>
+              <option>Question Bank</option>
+
+            </select>
+
+          </label>
+
+        </div>
+
+
+        <label>
+          Link / File reference
+
+          <input
+            class="input"
+            name="link"
+            placeholder="https://…"
+          />
+
+        </label>
+
+
+        <button
+          class="btn btn-primary"
+          type="submit"
+        >
+          Publish to students
+        </button>
+
+      </form>
+
+
+      <ul
+        class="feed"
+        id="resourceFeed"
+      >
+        <!-- JS -->
+      </ul>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAINTENANCE
+         ===================================================== -->
+
+    <section class="card">
+
+      <div class="card-head">
+
+        <h3>
+          Report Maintenance Issue
+        </h3>
+
+      </div>
+
+
+      <form
+        class="form"
+        id="issueForm"
+      >
+
+
+        <div class="form-row">
+
+          <label>
+            Location
+
+            <select
+              class="input"
+              name="room"
+              id="issueRoom"
+            ></select>
+
+          </label>
+
+
+          <label>
+            Category
+
+            <select
+              class="input"
+              name="category"
+            >
+
+              <option>Electrical</option>
+              <option>Plumbing</option>
+              <option>Projector / AV</option>
+              <option>Furniture</option>
+              <option>Network</option>
+
+            </select>
+
+          </label>
+
+        </div>
+
+
+        <label>
+          Priority
+
+          <div
+            class="seg"
+            id="prioritySeg"
+          >
+
+            <button
+              type="button"
+              class="seg-btn"
+              data-val="Low"
+            >
+              Low
+            </button>
+
+            <button
+              type="button"
+              class="seg-btn is-active"
+              data-val="Medium"
+            >
+              Medium
+            </button>
+
+            <button
+              type="button"
+              class="seg-btn"
+              data-val="High"
+            >
+              High
+            </button>
+
+          </div>
+
+        </label>
+
+
+        <label>
+          Description
+
+          <textarea
+            class="input"
+            name="description"
+            rows="3"
+            placeholder="Projector flickers after 10 min…"
+          ></textarea>
+
+        </label>
+
+
+        <button
+          class="btn btn-danger"
+          type="submit"
+        >
+          Raise ticket
+        </button>
+
+      </form>
+
+
+      <ul
+        class="feed"
+        id="issueFeed"
+      >
+        <!-- JS -->
+      </ul>
+
+    </section>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ======================= ADMIN PORTAL ====================
+     ========================================================= -->
+
+<section
+  class="view"
+  id="view-admin"
+>
+
+
+  <!-- ADMIN HEADER -->
+
+  <div class="hero-strip">
+
+    <div>
+
+      <p class="eyebrow">
+        Administration control room
+      </p>
+
+      <h2 class="page-title">
+        Campus vitals at a glance.
+      </h2>
+
+    </div>
+
+    <div
+      class="stat-inline"
+      id="adminQuickStats"
+    ></div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       CAMPUS KPI OVERVIEW
+       ===================================================== -->
+
+  <div
+    class="kpi-row"
+    id="kpiRow"
+  >
+    <!-- JS -->
+  </div>
+
+
+
+  <!-- =====================================================
+       AI ANALYTICS
+       ===================================================== -->
+
+  <section class="ai-section">
+
+
+    <!-- 30-MINUTE OCCUPANCY PREDICTION -->
+
+    <section class="card ai-card ai-card-prediction">
+
+      <div class="card-head">
+
+        <div>
+
+          <p class="tiny ai-eyebrow">
+            AI / FORECAST
+          </p>
+
+          <h3>
+            30-Minute Occupancy Prediction
+          </h3>
+
+        </div>
+
+        <span class="badge badge-live">
+          AI MODEL
+        </span>
+
+      </div>
+
+
+      <div class="ai-prediction-grid">
+
+        <div class="ai-metric ai-metric-current">
+
+          <span>
+            Current Occupancy
+          </span>
+
+          <b id="aiCurrentOccupancy">
+            —
+          </b>
+
+        </div>
+
+
+        <div class="ai-metric ai-metric-predicted">
+
+          <span>
+            Predicted Occupancy
+          </span>
+
+          <b id="aiPredictedOccupancy">
+            —
+          </b>
+
+        </div>
+
+
+        <div class="ai-metric ai-metric-change">
+
+          <span>
+            Predicted Change
+          </span>
+
+          <b id="aiPredictedChange">
+            —
+          </b>
+
+        </div>
+
+
+        <div class="ai-metric ai-metric-crowd">
+
+          <span>
+            Crowd Level
+          </span>
+
+          <b id="aiCrowdLevel">
+            —
+          </b>
+
+        </div>
+
+      </div>
+
+
+      <div class="ai-recommendation">
+
+        <span class="tiny">
+          AI Recommendation
+        </span>
+
+        <p id="aiRecommendation">
+          Waiting for prediction...
+        </p>
+
+        <small id="aiAction"></small>
+
+      </div>
+
+
+      <p class="ai-source">
+        Prototype prediction using the trained occupancy model
+        and public ROBOD/NUS data.
+      </p>
+
+    </section>
+
+
+
+    <!-- OCCUPANCY PATTERNS -->
+
+    <section class="card ai-card ai-card-patterns">
+
+      <div class="card-head">
+
+        <div>
+
+          <p class="tiny ai-eyebrow">
+            AI / PATTERNS
+          </p>
+
+          <h3>
+            Occupancy Patterns
+          </h3>
+
+        </div>
+
+        <span class="badge badge-ghost">
+          ANALYTICS
+        </span>
+
+      </div>
+
+
+      <div class="ai-stat-list">
+
+        <div>
+
+          <span>
+            Peak Hour
+          </span>
+
+          <b id="aiPeakHour">
+            —
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Peak Avg.
+          </span>
+
+          <b id="aiPeakAverage">
+            —
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Weekday Avg.
+          </span>
+
+          <b id="aiWeekdayAverage">
+            —
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Weekend Avg.
+          </span>
+
+          <b id="aiWeekendAverage">
+            —
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Wi-Fi Correlation
+          </span>
+
+          <b id="aiWifiCorrelation">
+            —
+          </b>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- OCCUPANCY ANOMALIES -->
+
+    <section class="card ai-card ai-card-anomalies">
+
+      <div class="card-head">
+
+        <div>
+
+          <p class="tiny ai-eyebrow">
+            AI / ANOMALIES
+          </p>
+
+          <h3>
+            Occupancy Anomalies
+          </h3>
+
+        </div>
+
+        <span class="badge badge-warn">
+          DETECTION
+        </span>
+
+      </div>
+
+
+      <div class="ai-anomaly-content">
+
+        <div class="ai-anomaly-main">
+
+          <b id="aiAnomalyCount">
+            —
+          </b>
+
+          <span>
+            anomalies detected
+          </span>
+
+        </div>
+
+
+        <div class="ai-anomaly-details">
+
+          <div>
+
+            <span>
+              Total Records
+            </span>
+
+            <b id="aiAnomalyTotal">
+              —
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Detection Rate
+            </span>
+
+            <b id="aiAnomalyRate">
+              —
+            </b>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <p class="ai-source">
+        Statistical anomaly detection using rolling occupancy behavior.
+      </p>
+
+    </section>
+
+
   </section>
+
+
+
+  <!-- =====================================================
+       CAMPUS MONITORING
+       ===================================================== -->
+
+  <div class="grid grid-admin">
+
+
+    <!-- OCCUPANCY HEATMAP -->
+
+    <section class="card span-2">
+
+      <div class="card-head">
+
+        <h3>
+          Occupancy Heatmap
+        </h3>
+
+        <span class="mono tiny">
+          block × hour · % capacity
+        </span>
+
+      </div>
+
+
+      <div
+        class="heatmap"
+        id="heatmap"
+      >
+        <!-- JS -->
+      </div>
+
+
+      <div class="heat-scale">
+
+        <span class="mono tiny">
+          low
+        </span>
+
+        <i class="heat-bar"></i>
+
+        <span class="mono tiny">
+          high
+        </span>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- UTILITY CONSUMPTION -->
+
+    <section class="card">
+
+      <div class="card-head">
+
+        <h3>
+          Utility Consumption
+        </h3>
+
+        <span class="mono tiny">
+          vs daily budget
+        </span>
+
+      </div>
+
+
+      <div
+        class="meters"
+        id="utilityMeters"
+      >
+        <!-- JS -->
+      </div>
+
+    </section>
+
+
+
+    <!-- SMART PARKING -->
+
+    <section class="card">
+
+      <div class="card-head">
+
+        <h3>
+          Smart Parking
+        </h3>
+
+        <span
+          class="mono tiny"
+          id="parkSummary"
+        ></span>
+
+      </div>
+
+
+      <div
+        class="park-lots"
+        id="parkingLots"
+      >
+        <!-- JS -->
+      </div>
+
+    </section>
+
+
+
+    <!-- MAINTENANCE ALERT LOG -->
+
+    <section class="card span-2">
+
+      <div class="card-head">
+
+        <h3>
+          Maintenance Alert Log
+        </h3>
+
+
+        <div
+          class="chips"
+          id="alertFilters"
+        >
+
+          <button
+            class="chip is-active"
+            data-sev="all"
+          >
+            All
+          </button>
+
+          <button
+            class="chip"
+            data-sev="High"
+          >
+            High
+          </button>
+
+          <button
+            class="chip"
+            data-sev="Medium"
+          >
+            Medium
+          </button>
+
+          <button
+            class="chip"
+            data-sev="Low"
+          >
+            Low
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <ul
+        class="alert-log"
+        id="alertLog"
+      >
+        <!-- JS -->
+      </ul>
+
+    </section>
+
+
+  </div>
+
+</section>
+ 
+<!-- =========================================================
+     CAMPUS INTELLIGENCE
+     ========================================================= -->
+
+<section class="view" id="view-campus-intelligence">
+
+  <div class="hero-strip">
+    <div>
+      <p class="eyebrow">Smart campus tools</p>
+      <h2 class="page-title">Campus Intelligence</h2>
+      <p>Plan your day, explore campus scenarios, and make smarter decisions.</p>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+
+    <article class="card">
+      <div class="card-head">
+        <h3>Smart Timetable Analyzer</h3>
+      </div>
+      <p>Upload and review your timetable, organize classes, and keep track of tasks and reminders.</p>
+      <button class="btn btn-primary" type="button" onclick="openCampusTool('campus-intelligence.html')">
+        Open Timetable Analyzer
+      </button>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h3>What-If Lab</h3>
+      </div>
+      <p>Explore campus scenarios and see how changes can affect your campus experience.</p>
+      <button class="btn btn-primary" type="button" onclick="openCampusTool('campus-pulse.html')">
+        Open What-If Lab
+      </button>
+    </article>
+
+  </div>
+
+  <div id="campusToolContainer" style="display:none; margin-top:24px;">
+    <button class="btn" type="button" onclick="closeCampusTool()">← Back to Campus Intelligence</button>
+    <iframe
+      id="campusToolFrame"
+      title="Campus Intelligence tool"
+      style="display:block; width:100%; height:850px; border:0; border-radius:12px; margin-top:16px; background:var(--surface, white);"
+    ></iframe>
+  </div>
+
+</section>
 </main>
 
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
 <footer class="footer">
-  <span class="mono tiny">Digital Twin Campus · Frontend prototype · mock data layer (see <code>DATA_SOURCE</code> in app.js)</span>
+
+  <span class="mono tiny">
+    Digital Twin Campus · Frontend prototype · mock data layer
+    (see <code>DATA_SOURCE</code> in app.js)
+  </span>
+
 </footer>
 
-<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+
+<div
+  class="toast-stack"
+  id="toastStack"
+  aria-live="polite"
+></div>
+
+
 
 <script src="./app.js"></script>
 <script type="module" src="./campus3d.js"></script>
 </body>
 </html>
 
-   
+</body>
+</html>

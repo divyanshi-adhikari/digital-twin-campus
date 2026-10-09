@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Intelligence | Digital Twin Campus</title>
+<style>
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e8edf7;background:#0b1020}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top right,#1b3150,#0b1020 60%);min-height:100vh}
+header,main{max-width:1100px;margin:auto;padding:24px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+a{color:#9bc8ff;text-decoration:none}button,.btn{border:0;border-radius:10px;padding:11px 15px;background:#7c9cff;color:#081225;font-weight:700;cursor:pointer}
+button.secondary,.btn.secondary{background:#26334d;color:#e8edf7}
+h1{font-size:clamp(28px,5vw,42px);margin:12px 0}h2{margin-top:0}p{color:#b8c5dc;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:26px 0}
+.card,.panel{background:#141d31;border:1px solid #2b3a55;border-radius:18px;padding:22px}
+.card{min-height:185px;display:flex;flex-direction:column;align-items:flex-start}
+.card .btn{margin-top:auto}.icon{font-size:28px;margin-bottom:12px}
+.panel{margin:18px 0}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input,select,textarea{width:100%;background:#0b1324;color:#e8edf7;border:1px solid #354765;border-radius:9px;padding:11px;font:inherit}
+label{display:block;font-size:13px;color:#b8c5dc;margin:12px 0 6px}
+form .formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.small{font-size:13px;color:#a8b7d0}.hidden{display:none!important}.item{padding:13px;border:1px solid #354765;border-radius:12px;margin:9px 0;background:#0f182b}
+.item h3{margin:0 0 6px}.pill{font-size:12px;background:#263b59;border-radius:20px;padding:4px 8px;color:#c5dcff}
+textarea{min-height:130px;resize:vertical}hr{border:0;border-top:1px solid #2b3a55;margin:20px 0}
+@media(max-width:700px){.grid{grid-template-columns:1fr}form .formgrid{grid-template-columns:1fr}header,main{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <a href="./index.html">← Digital Twin Campus</a>
+  <a href="./campus-pulse.html">Open What-If Lab →</a>
+</header>
+<main>
+  <h1>Campus Intelligence</h1>
+  <p>Intelligent tools to organize your campus day and explore smarter campus decisions.</p>
+  <section class="grid">
+    <article class="card">
+      <div class="icon">📅</div><h2>Smart Timetable Analyzer</h2>
+      <p>Review your university timetable, organize classes, and manage class-linked notes, tests and assignment reminders.</p>
+      <button onclick="document.querySelector('#analyzer').scrollIntoView({behavior:'smooth'})">Open Analyzer →</button>
+    </article>
+    <article class="card">
+      <div class="icon">🧪</div><h2>What-If Lab</h2>
+      <p>Compare simulated campus event response plans and explore possible outcomes.</p>
+      <a class="btn" href="./campus-pulse.html">Open What-If Lab →</a>
+    </article>
+  </section>
+
+  <section id="analyzer" class="panel">
+    <h2>1. Upload official timetable</h2>
+    <p class="small">Choose a PDF or image. Extracted text needs your review; timetable layouts vary, so this prototype will not silently guess your classes.</p>
+    <label for="timetableFile">University timetable (PDF, PNG, JPG)</label>
+    <input id="timetableFile" type="file" accept=".pdf,image/png,image/jpeg,image/webp">
+    <div id="fileStatus" class="small" role="status" style="margin-top:10px"></div>
+    <label for="section">Timetable section / group</label>
+    <input id="section" placeholder="e.g. A11">
+    <label for="extracted">Extracted text — review it and use it to enter classes below</label>
+    <textarea id="extracted" placeholder="Extracted timetable text will appear here. Check all days, times and subjects before confirming."></textarea>
+    <button id="extractBtn">Extract text from file</button>
+    <p class="small">PDF text extraction and image OCR load their libraries from a CDN and require an internet connection. Scanned PDFs may need to be converted to images first.</p>
+  </section>
+
+  <section class="panel">
+    <h2>2. Add and confirm class occurrences</h2>
+    <p class="small">Enter each class from the reviewed official timetable. Only confirmed classes appear in your schedule.</p>
+    <form id="classForm">
+      <div class="formgrid">
+        <div><label>Subject / class name *</label><input id="subject" required placeholder="Database Management Systems"></div>
+        <div><label>Course code</label><input id="course" placeholder="CSE2001"></div>
+        <div><label>Day *</label><select id="day" required><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></div>
+        <div><label>Room / building</label><input id="room" placeholder="As listed by university"></div>
+        <div><label>Start time *</label><input id="start" type="time" required></div>
+        <div><label>End time *</label><input id="end" type="time" required></div>
+      </div>
+      <p><button type="submit">Add class for review</button></p>
+    </form>
+    <div id="classReview"></div>
+    <button id="confirmClasses" class="secondary">Confirm reviewed classes</button>
+  </section>
+
+  <section class="panel">
+    <h2>3. Your timetable</h2>
+    <div class="row">
+      <button class="secondary" id="todayBtn">Today</button>
+      <button class="secondary" id="weekBtn">Weekly timetable</button>
+    </div>
+    <div id="schedule"></div>
+  </section>
+
+  <section class="panel">
+    <h2>4. Class notes and reminders</h2>
+    <form id="reminderForm">
+      <label>Attach to a confirmed class *</label><select id="reminderClass" required></select>
+      <label>Type</label><select id="reminderType"><option value="note">Simple note</option><option value="task">Dated task</option></select>
+      <label>Title *</label><input id="reminderTitle" required placeholder="Prepare for quiz">
+      <label>Details (optional)</label><input id="reminderDetails" placeholder="Revise Unit 2">
+      <div id="datedFields">
+        <label>Due date and time *</label><input id="dueAt" type="datetime-local">
+        <label>Remind me at *</label><input id="remindAt" type="datetime-local">
+      </div>
+      <p><button type="submit">Save reminder</button></p>
+    </form>
+    <div class="row">
+      <button class="secondary" id="activeBtn">Active reminders</button>
+      <button class="secondary" id="completedBtn">Completed reminders</button>
+      <button class="secondary" id="notifyBtn">Enable browser notifications</button>
+    </div>
+    <div id="reminders"></div>
+    <p class="small">Browser notifications require permission and a supported secure context (usually HTTPS or localhost). This prototype does not send notifications when the page is closed.</p>
+  </section>
+  <p class="small">Prototype: data is stored in this browser only. Student-account synchronization is not connected yet.</p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const KEY = "campusIntelligencePrototype_v1";
+let data;
+try { data = JSON.parse(localStorage.getItem(KEY)) || {classes:[],confirmed:false,reminders:[]}; }
+catch { data = {classes:[],confirmed:false,reminders:[]}; }
+let reminderView = "active", scheduleView = "today";
+function save(){localStorage.setItem(KEY,JSON.stringify(data));}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function renderClasses(){
+  $("classReview").innerHTML = data.classes.length ? data.classes.map((c,i)=>`<div class="item"><b>${esc(c.subject)}</b> <span class="pill">${esc(c.day)}</span><p>${esc(c.start)}–${esc(c.end)} · ${esc(c.course)} · ${esc(c.room)}</p><button class="secondary" onclick="removeClass(${i})">Remove</button></div>`).join("") : '<p class="small">No classes added yet.</p>';
+  $("reminderClass").innerHTML = data.classes.length ? data.classes.map((c,i)=>`<option value="${esc(c.id)}">${esc(c.subject)} — ${esc(c.day)} ${esc(c.start)}</option>`).join("") : '<option value="">Add a class first</option>';
+  renderSchedule();renderReminders();
+}
+window.removeClass = i => {if(confirm("Remove this class? Its linked reminders will remain saved.")){data.classes.splice(i,1);data.confirmed=false;save();renderClasses();}};
+function renderSchedule(){
+ const today=days[new Date().getDay()];
+ let list=data.classes.filter(c=>data.confirmed&&(scheduleView==="week"||c.day===today));
+ list.sort((a,b)=>days.indexOf(a.day)-days.indexOf(b.day)||a.start.localeCompare(b.start));
+ $("schedule").innerHTML=list.length?list.map(c=>`<div class="item"><h3>${esc(c.subject)}</h3><span class="pill">${esc(c.day)}</span><p>${esc(c.start)}–${esc(c.end)} · ${esc(c.room||"Room not specified")}</p><p class="small">${esc(c.course)}</p>${data.reminders.filter(r=>r.classId===c.id&&!r.completed).map(r=>`<p>🔔 ${esc(r.title)} ${r.dueAt?"· Due "+esc(r.dueAt.replace("T"," ")):""}</p>`).join("")}</div>`).join(""): `<p class="small">${data.confirmed?"No classes for this view.":"Confirm your reviewed classes to activate the timetable."}</p>`;
+}
+function renderReminders(){
+ let list=data.reminders.filter(r=>r.completed===(reminderView==="completed"));
+ $("reminders").innerHTML=list.length?list.map(r=>`<div class="item"><h3>${esc(r.title)}</h3><p>${esc(data.classes.find(c=>c.id===r.classId)?.subject||"Class no longer in schedule")} · ${r.type==="task"?"Due "+esc(r.dueAt||"not set"):"Simple note"}</p><p>${esc(r.details)}</p>${r.remindAt?`<p class="small">Reminder: ${esc(r.remindAt)}</p>`:""}<button onclick="toggleReminder('${r.id}')">${r.completed?"Mark active":"Mark completed"}</button></div>`).join(""):'<p class="small">No reminders in this list.</p>';
+}
+window.toggleReminder = id => {const r=data.reminders.find(x=>x.id===id);if(r){r.completed=!r.completed;save();renderReminders();renderSchedule();}};
+$("classForm").addEventListener("submit",e=>{
+ e.preventDefault();const start=$("start").value,end=$("end").value;
+ if(end<=start){alert("End time must be later than start time.");return;}
+ data.classes.push({id:crypto.randomUUID(),subject:$("subject").value.trim(),course:$("course").value.trim(),day:$("day").value,room:$("room").value.trim(),start,end});
+ data.confirmed=false;save();e.target.reset();renderClasses();
+});
+$("confirmClasses").onclick=()=>{if(!data.classes.length){alert("Add and review at least one class first.");return;}if(confirm("Confirm these classes and activate the timetable?")){data.confirmed=true;save();renderClasses();alert("Timetable confirmed.");}};
+$("todayBtn").onclick=()=>{scheduleView="today";renderSchedule();};
+$("weekBtn").onclick=()=>{scheduleView="week";renderSchedule();};
+$("activeBtn").onclick=()=>{reminderView="active";renderReminders();};
+$("completedBtn").onclick=()=>{reminderView="completed";renderReminders();};
+$("reminderType").onchange=()=>{$("datedFields").classList.toggle("hidden",$("reminderType").value!=="task");};
+$("reminderForm").addEventListener("submit",e=>{
+ e.preventDefault();const type=$("reminderType").value,dueAt=$("dueAt").value,remindAt=$("remindAt").value;
+ if(!$("reminderClass").value){alert("Add a class first.");return;}
+ if(type==="task"&&(!dueAt||!remindAt)){alert("Enter both the due date and reminder time.");return;}
+ if(type==="task"&&remindAt>dueAt){alert("Reminder time must be before or at the due time.");return;}
+ data.reminders.push({id:crypto.randomUUID(),classId:$("reminderClass").value,type,title:$("reminderTitle").value.trim(),details:$("reminderDetails").value.trim(),dueAt:type==="task"?dueAt:"",remindAt:type==="task"?remindAt:"",completed:false,alerted:false});
+ save();e.target.reset();$("reminderType").dispatchEvent(new Event("change"));renderReminders();renderSchedule();
+});
+$("notifyBtn").onclick=async()=>{if(!("Notification"in window)){alert("Browser notifications are not supported here.");return;}try{const p=await Notification.requestPermission();alert("Notification permission: "+p);}catch{alert("Could not request notification permission.");}};
+$
+
+$("extractBtn").onclick = async () => {
+  const file = $("timetableFile").files[0];
+
+  if (!file) {
+    alert("Choose a PDF or image first.");
+    return;
+  }
+
+  $("fileStatus").textContent = "Extracting text…";
+  $("extracted").value = "";
+
+  try {
+    let text = "";
+
+    if (
+      file.type === "application/pdf" ||
+      file.name.toLowerCase().endsWith(".pdf")
+    ) {
+      if (!window.pdfjsLib) {
+        throw Error("PDF library did not load. Check your internet connection.");
+      }
+
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+      const pdf = await pdfjsLib.getDocument({
+        data: await file.arrayBuffer()
+      }).promise;
+
+      for (let n = 1; n <= pdf.numPages; n++) {
+        const page = await pdf.getPage(n);
+        const content = await page.getTextContent();
+
+        text += `\n--- Page ${n} ---\n` +
+          content.items.map(item => item.str).join(" ") + "\n";
+      }
+
+      if (!text.replace(/--- Page \d+ ---/g, "").trim()) {
+        text = "No selectable text found. Please upload a PNG or JPG image.";
+      }
+    } else {
+      if (!window.Tesseract) {
+        throw Error("OCR library did not load. Check your internet connection.");
+      }
+
+      $("fileStatus").textContent = "Preparing image…";
+
+      const img = await createImageBitmap(file);
+      const scale = Math.max(2, 2200 / img.width);
+      const canvas = document.createElement("canvas");
+
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      img.close();
+
+      const imageData = ctx.getImageData(
+        0, 0, canvas.width, canvas.height
+      );
+      const pixels = imageData.data;
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        const gray =
+          0.299 * pixels[i] +
+          0.587 * pixels[i + 1] +
+          0.114 * pixels[i + 2];
+
+        const value = gray > 160 ? 255 : 0;
+
+        pixels[i] = value;
+        pixels[i + 1] = value;
+        pixels[i + 2] = value;
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+
+      const result = await Tesseract.recognize(canvas, "eng");
+      text = result.data.text || "No text detected. Try a clearer image.";
+    }
+
+    $("extracted").value = text;
+    $("fileStatus").textContent =
+      "Text extraction finished. Review the extracted text.";
+
+  } catch (err) {
+    $("fileStatus").textContent =
+      "Extraction failed: " + err.message;
+    console.error("Timetable extraction error:", err);
+  }
+};
+
+
+</script>
+</body>
+</html>
