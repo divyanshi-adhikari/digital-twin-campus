@@ -570,3 +570,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadAIAnomalies();
   await loadAIPrediction();
 });
+
+function openCampusTool(url) {
+  const container = document.getElementById("campusToolContainer");
+  const frame = document.getElementById("campusToolFrame");
+
+  if (!container || !frame) return;
+
+  frame.src = url;
+  container.style.display = "block";
+  container.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeCampusTool() {
+  const container = document.getElementById("campusToolContainer");
+  const frame = document.getElementById("campusToolFrame");
+
+  if (!container || !frame) return;
+
+  frame.src = "about:blank";
+  container.style.display = "none";
+}

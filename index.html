@@ -55,51 +55,49 @@
 
 
   <!-- Existing role switcher -->
-  <nav
-    class="role-switch"
-    role="tablist"
-    aria-label="Select portal"
+ 
+<nav
+  class="role-switch"
+  role="tablist"
+  aria-label="Select portal"
+>
+  <button
+    class="role-btn is-active"
+    role="tab"
+    data-view="student"
   >
+    Student
+  </button>
 
-    <button
-      class="role-btn is-active"
-      role="tab"
-      data-view="student"
-    >
-      Student
-    </button>
+  <button
+    class="role-btn"
+    role="tab"
+    data-view="faculty"
+  >
+    Faculty
+  </button>
 
-    <button
-      class="role-btn"
-      role="tab"
-      data-view="faculty"
-    >
-      Faculty
-    </button>
+  <button
+    class="role-btn"
+    role="tab"
+    data-view="admin"
+  >
+    Admin
+  </button>
 
-    <button
-      class="role-btn"
-      role="tab"
-      data-view="admin"
-    >
-      Admin
-    </button>
+  <span
+    class="role-pill"
+    aria-hidden="true"
+  ></span>
 
-    <a
-      class="role-btn"
-      href="./campus-pulse.html"
-      role="tab"
-      style="text-decoration:none;display:inline-flex;align-items:center"
-    >
-      What-If Lab
-    </a>
-
-    <span
-      class="role-pill"
-      aria-hidden="true"
-    ></span>
-
-  </nav>
+  <button
+  class="role-btn"
+  role="tab"
+  data-view="campus-intelligence"
+>
+  Campus Intelligence
+</button>
+</nav>
 
   <div class="topbar-right">
 
@@ -1337,7 +1335,55 @@
   </div>
 
 </section>
+ 
+<!-- =========================================================
+     CAMPUS INTELLIGENCE
+     ========================================================= -->
 
+<section class="view" id="view-campus-intelligence">
+
+  <div class="hero-strip">
+    <div>
+      <p class="eyebrow">Smart campus tools</p>
+      <h2 class="page-title">Campus Intelligence</h2>
+      <p>Plan your day, explore campus scenarios, and make smarter decisions.</p>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+
+    <article class="card">
+      <div class="card-head">
+        <h3>Smart Timetable Analyzer</h3>
+      </div>
+      <p>Upload and review your timetable, organize classes, and keep track of tasks and reminders.</p>
+      <button class="btn btn-primary" type="button" onclick="openCampusTool('campus-intelligence.html')">
+        Open Timetable Analyzer
+      </button>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <h3>What-If Lab</h3>
+      </div>
+      <p>Explore campus scenarios and see how changes can affect your campus experience.</p>
+      <button class="btn btn-primary" type="button" onclick="openCampusTool('campus-pulse.html')">
+        Open What-If Lab
+      </button>
+    </article>
+
+  </div>
+
+  <div id="campusToolContainer" style="display:none; margin-top:24px;">
+    <button class="btn" type="button" onclick="closeCampusTool()">← Back to Campus Intelligence</button>
+    <iframe
+      id="campusToolFrame"
+      title="Campus Intelligence tool"
+      style="display:block; width:100%; height:850px; border:0; border-radius:12px; margin-top:16px; background:var(--surface, white);"
+    ></iframe>
+  </div>
+
+</section>
 </main>
 
 
